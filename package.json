@@ -1,0 +1,26 @@
+{
+  "name": "@guseyn/cutie-benchmarks",
+  "version": "1.0.0",
+  "description": "Benchmarks (cpu time usage, memory usage) of cutie libraries. The main point of this project is to compare performance of \"cuties\" with performance of other popular libraries/frameworks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Guseyn/cutie-benchmarks.git"
+  },
+  "keywords": [
+    "cutie",
+    "benchmarks"
+  ],
+  "dependencies": {
+    "@guseyn/cutie-rest": "1.0.1"
+  },
+  "author": "guseyn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Guseyn/cutie-benchmarks/issues"
+  },
+  "homepage": "https://github.com/Guseyn/cutie-benchmarks#readme"
+}
