@@ -10,7 +10,8 @@ class LoggedExecutionTime extends AsyncObject {
 
   definedSyncCall() {
     return (startTime, asyncObject) => {
-      let executionTime = [process.hrtime()[0] - startTime[0], process.hrtime()[1] - startTime[1]];
+      let now = process.hrtime();
+      let executionTime = [now[0] - startTime[0], now[1] - startTime[1]];
       console.log(`${executionTime[0]}s, ${executionTime[1]} ns or ${executionTime[1] * 1e-6} ms`);
       return executionTime;
     }
