@@ -1,3 +1,7 @@
+/* 
+  Example of simple request-response app on pure Node
+*/
+
 const http = require('http');
 
 http.createServer((request, response) => {

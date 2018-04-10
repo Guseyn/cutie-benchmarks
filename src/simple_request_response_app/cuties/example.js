@@ -1,5 +1,9 @@
 'use strict'
 
+/* 
+  Example of simple request-response app on cuties
+*/
+
 const {
   Backend, RestApi
 } = require('@guseyn/cutie-rest');
