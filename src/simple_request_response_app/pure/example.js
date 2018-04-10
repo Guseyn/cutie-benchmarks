@@ -35,7 +35,8 @@ http.createServer((request, response) => {
     //const used = process.memoryUsage().heapUsed / 1024 / 1024;
     //console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
 
-    let executionTime = [process.hrtime()[0] - startTime[0], process.hrtime()[1] - startTime[1]];
+    let now = process.hrtime();
+    let executionTime = [now[0] - startTime[0], now[1] - startTime[1]];
     console.log(`${executionTime[0]}s, ${executionTime[1]} ns or ${executionTime[1] * 1e-6} ms`);
   
   });
