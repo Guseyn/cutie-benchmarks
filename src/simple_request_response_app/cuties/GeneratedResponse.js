@@ -9,7 +9,7 @@ const {
   WrittenResponse,
   ResponseWithWrittenHead
 } = require('@guseyn/cutie-http');
-const LoggedExecutionTime = require('./LoggedExecutionTime');
+const LoggedMemoryUsage = require('./LoggedMemoryUsage');
 
 class GeneratedResponse extends Method {
 
@@ -19,11 +19,10 @@ class GeneratedResponse extends Method {
 
   invoke(headers, type, url, body, response) {
     let content = {headers, type, url, body};
-    new LoggedExecutionTime(
-      process.hrtime(),
+    new LoggedMemoryUsage(
       new EndedResponse(
         new WrittenResponse(
-          new ResponseWithWrittenHead(
+           new ResponseWithWrittenHead(
             response, 200, 'ok',  {
               'Content-Type': 'text/plain' 
             }
