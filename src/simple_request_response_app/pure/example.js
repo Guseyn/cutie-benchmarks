@@ -31,13 +31,19 @@ http.createServer((request, response) => {
     );
     response.write('content');
     response.end(` ... is delivered => ${content}`);
-     
-    //const used = process.memoryUsage().heapUsed / 1024 / 1024;
-    //console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
+    
+    // time
+    const now = process.hrtime();
+    const executionTime = [now[0] - startTime[0], now[1] - startTime[1]];
+    console.log(`${executionTime[0]}s, ${executionTime[1] * 1e-6} ms`);
 
-    let now = process.hrtime();
-    let executionTime = [now[0] - startTime[0], now[1] - startTime[1]];
-    console.log(`${executionTime[0]}s, ${executionTime[1]} ns or ${executionTime[1] * 1e-6} ms`);
+    // memory
+    const used = process.memoryUsage();
+    for (let key in used) {
+      console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+    }
   
   });
-}).listen(4201);
+}).listen(4201, () => {
+  console.log('started on 127.0.0.1:4201');
+});
