@@ -31,11 +31,6 @@ http.createServer((request, response) => {
     );
     response.write('content');
     response.end(` ... is delivered => ${content}`);
-    
-    // time
-    const now = process.hrtime();
-    const executionTime = [now[0] - startTime[0], now[1] - startTime[1]];
-    console.log(`${executionTime[0]}s, ${executionTime[1] * 1e-6} ms`);
 
     // memory
     const used = process.memoryUsage();
@@ -45,5 +40,5 @@ http.createServer((request, response) => {
   
   });
 }).listen(4201, () => {
-  console.log('started on 127.0.0.1:4201');
+  console.log('Server running at: 4201');
 });

@@ -24,3 +24,4 @@ app.get('/', function (req, res) {
 });
  
 app.listen(4202);
+console.log('Server running at: 4202');
