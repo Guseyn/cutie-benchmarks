@@ -3,6 +3,7 @@
 */
 
 const http = require('http');
+const port = process.env.PORT;
 
 http.createServer((request, response) => {
   const { headers, method, url } = request;
@@ -39,6 +40,6 @@ http.createServer((request, response) => {
     }
   
   });
-}).listen(4201, () => {
+}).listen(port, () => {
   console.log('Server running at: 4201');
 });

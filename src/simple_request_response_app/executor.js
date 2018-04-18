@@ -6,37 +6,70 @@ const fs = require('fs');
 
 const find = require('find-process');
 
-const runCutiesExample = spawn('node', ['./src/simple_request_response_app/cuties/example.js']);
-const runPureExample = spawn('node', ['./src/simple_request_response_app/pure/example.js']);
-const runExpressExample = spawn('node', ['./src/simple_request_response_app/express/example.js']);
-const runHapiExample = spawn('node', ['./src/simple_request_response_app/hapi/example.js']);
+// For ab
+const c = process.env.c;
+const n = process.env.n;
 
 const benchmarks = [
   {
     name: 'cuties',
     port: '4200',
-    command: runCutiesExample,
     result: {}
   },
   {
     name: 'pure',
     port: '4201',
-    command: runPureExample,
     result: {}
   },
   {
     name: 'express',
     port: '4202',
-    command: runExpressExample,
     result: {}
   },
   {
     name: 'hapi',
     port: '4203',
-    command: runHapiExample,
     result: {}
   }
 ]
+
+process.on('SIGHUP', () => {
+  console.log('Got SIGHUP signal.');
+});
+
+function runBenchmark(benchmark) {
+  killProcessOnPort(benchmark.port, () => {
+    const server = spawn(
+      'node', [`./src/simple_request_response_app/${benchmark.name}/example.js`], {
+        env: portForSpawn(benchmark.name)
+      }
+    );
+    let started = false;
+    server.stdout.on('data', (data) => {
+      if (!started) {
+        console.log(`${benchmark.name} has started on port: ${benchmark.port}`);
+        started = true;
+
+        const ab = spawn('ab', ['-c', c, '-n', n, `http://127.0.0.1:${benchmark.port}/`]);
+        ab.stdout.on('data', (data) => {
+          console.log(data.toString('utf8'));
+        });
+        ab.stderr.on('data', (data) => {
+          console.log(data.toString('utf8'));
+        });
+      }
+    });
+    server.stderr.on('data', (data) => {
+      console.log(`${benchmark.name} has failed on port: ${benchmark.port} with ${data}`);
+    });
+  });
+}
+
+function portForSpawn(spawnName) {
+  const env = Object.create(process.env);
+  env.PORT = findBenchmarkByName(spawnName).port;
+  return env;
+}
 
 function findBenchmarkByPort(port) {
   return benchmarks.filter(benchmark => {
@@ -44,84 +77,20 @@ function findBenchmarkByPort(port) {
   })[0];
 }
 
-const c = 100;
-const n = 10000;
-const nPerC = Math.floor(n / c);
-
-function sendConcurrentRequest(port, curC, curN, callback) {
-  http.get(`http://127.0.0.1:${port}`, (res) => {
-    curN += 1; 
-    if (curN < nPerC) {
-      sendConcurrentRequest(port, curC, curN, callback);
-    } else if (curN === nPerC) {
-      //console.log(`${curN} requests have been processed on port ${port} for user ${curC}`);
-      callback();
-    }
-  });
+function findBenchmarkByName(name) {
+  return benchmarks.filter(benchmark => {
+    return benchmark.name === name;
+  })[0];
 }
 
-function loadTest(port, callback) {
-  let count = 0;
-  let startTime = new Date().getTime();
-  for (let i = 0; i < c; i++) {
-    sendConcurrentRequest(port, i, 0, () => {
-      count += 1;
-      if (count === c) {
-        const now = new Date().getTime();
-        const executionTime = now - startTime;
-        findBenchmarkByPort(port).result.totalTime = executionTime;
-        console.log(`port: ${port}, time: ${executionTime} msec`);
-        callback();
-      }
-    });
-  }
-}
-
-function displayResults() {
-
-}
-
-let startedCount = 0;
-
-process.on('SIGHUP', () => {
-  console.log('Got SIGHUP signal.');
-});
-
-// free ports
-benchmarks.forEach((benchmark) => {
-  find('port', benchmark.port).then((list) => {
+function killProcessOnPort(port, callback) {
+  find('port', port).then((list) => {
     if (list.length) {
-      console.log(`%s is listening port ${benchmark.port}`, list[0].name);
+      console.log(`%s is listening port ${port}`, list[0].name);
       process.kill(list[0].pid, 'SIGHUP');
     }
+    callback();
   });
-});
+}
 
-// start
-benchmarks.forEach((benchmark, index) => {
-
-  benchmark.command.stdout.on('data', (data) => {
-    if (startedCount < benchmarks.length) {
-      console.log(`${benchmark.name} has started on port: ${benchmark.port}`);
-    }
-    startedCount += 1;
-    if (startedCount == benchmarks.length) {
-      console.log('servers are ready');
-
-      loadTest('4203', () => {
-        loadTest('4201', () => {
-          loadTest('4202', () => {
-            loadTest('4200', () => {});
-          });
-        });
-      });
-
-    }
-  });
-
-  benchmark.command.stderr.on('data', (data) => {
-    console.log(`${benchmark.name} has failed on port: ${benchmark.port} with ${data}`);
-  });
-
-});
-
+runBenchmark(benchmarks[0]);

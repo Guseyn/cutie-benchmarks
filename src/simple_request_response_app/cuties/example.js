@@ -9,8 +9,9 @@ const {
 } = require('@guseyn/cutie-rest');
 
 const GeneratedResponse = require('./GeneratedResponse');
+const port = process.env.PORT;
 
-new Backend(4200, '127.0.0.1').runWithApi(
+new Backend(port, '127.0.0.1').runWithApi(
   new RestApi(
     new GeneratedResponse(new RegExp(/\//), 'GET')
   )

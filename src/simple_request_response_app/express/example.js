@@ -5,6 +5,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express(); 
+const port = process.env.PORT;
 
 // parse application/json
 app.use(bodyParser.json())
@@ -23,5 +24,5 @@ app.get('/', function (req, res) {
   }
 });
  
-app.listen(4202);
+app.listen(port);
 console.log('Server running at: 4202');
