@@ -5,9 +5,10 @@
 'use strict';
 
 const Hapi = require('hapi');
+const port = process.env.PORT;
 
 const server = Hapi.server({
-    port: 4203,
+    port: port,
     host: 'localhost'
 });
 
