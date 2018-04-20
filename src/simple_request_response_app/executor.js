@@ -6,51 +6,51 @@ const fs = require('fs');
 
 const find = require('find-process');
 
-const testParams = [
+const fixedNParams = [
   {c: 10, n: 1000},
   {c: 20, n: 1000},
   {c: 40, n: 1000},
   {c: 60, n: 1000},
   {c: 80, n: 1000},
   {c: 100, n: 1000},
-  {c: 120, n: 1000},
+  {c: 120, n: 1000}
+];
 
+const fixedSmallCParams = [
   {c: 10, n: 10},
   {c: 10, n: 100},
   {c: 10, n: 200},
   {c: 10, n: 400},
   {c: 10, n: 600},
   {c: 10, n: 800},
-  {c: 10, n: 1000},
+  {c: 10, n: 1000}
+];
 
+const fixedMediumCParams = [
   {c: 40, n: 100},
   {c: 40, n: 200},
   {c: 40, n: 400},
   {c: 40, n: 600},
   {c: 40, n: 800},
   {c: 40, n: 1000}
-]
+];
 
 const benchmarks = [
   {
     name: 'cuties',
-    port: '4200',
-    result: {}
+    port: '4200'
   },
   {
     name: 'pure',
-    port: '4201',
-    result: {}
+    port: '4201'
   },
   {
     name: 'express',
-    port: '4202',
-    result: {}
+    port: '4202'
   },
   {
     name: 'hapi',
-    port: '4203',
-    result: {}
+    port: '4203'
   }
 ]
 
@@ -58,7 +58,7 @@ process.on('SIGHUP', () => {
   console.log('Got SIGHUP signal.');
 });
 
-function testBenchmark(benchmark, endCallback) {
+function testBenchmark(testParams, benchmark, endCallback) {
   killProcessOnPort(benchmark.port, () => {
     const server = spawn(
       'node', [`./src/simple_request_response_app/${benchmark.name}/example.js`], {
@@ -70,7 +70,7 @@ function testBenchmark(benchmark, endCallback) {
       if (!started) {
         console.log(`${benchmark.name} has started on port: ${benchmark.port}`);
         started = true;
-        runBenchmarkWithTestParams(benchmark, 0, endCallback);
+        runBenchmarkWithTestParams(testParams, benchmark, 0, endCallback);
       }
     });
     server.stderr.on('data', (data) => {
@@ -79,12 +79,12 @@ function testBenchmark(benchmark, endCallback) {
   });
 }
 
-function runBenchmarkWithTestParams(benchmark, count, endCallback) {
+function runBenchmarkWithTestParams(testParams, benchmark, count, endCallback) {
   if (testParams[count]) {
     runBenchmark(benchmark, testParams[count].c, testParams[count].n, (benchmark, result) => {
       parseAbResult(result);
       count += 1;
-      runBenchmarkWithTestParams(benchmark, count, endCallback);
+      runBenchmarkWithTestParams(testParams, benchmark, count, endCallback);
     });
   } else {
     endCallback();
@@ -157,7 +157,7 @@ function parseAbResult(result) {
 
 }
 
-testBenchmark(benchmarks[0], () => {
+testBenchmark(fixedNParams, benchmarks[0], () => {
   console.log('ok');
 });
 
