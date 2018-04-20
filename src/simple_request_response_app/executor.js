@@ -157,7 +157,7 @@ function parseAbResult(result) {
 
 }
 
-testBenchmark(testParams, benchmarks[0], () => {
+testBenchmark(fixedNParams, benchmarks[0], () => {
   console.log('ok');
 });
 
