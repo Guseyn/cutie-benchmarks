@@ -5,12 +5,12 @@ const spawn = require('child_process').spawn;
 
 class StartedServerByShell extends AsyncObject {
 
-  constructor(command, env) {
-    super(command, env);
+  constructor(proc, command, env) {
+    super(proc, command, env);
   }
 
   definedSyncCall() {
-    return (command, env) => {
+    return (proc, command, env) => {
       return spawn('node', [command], { env: env });
     }
   }
