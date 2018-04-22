@@ -1,27 +1,36 @@
 'use strict';
 
 const Event = require('@guseyn/cutie').Event;
-const ExecutedAb = require('./ExecutedAb');
-const ParsedAbResult = require('./ParsedAbResult');
+const ParsedAbResults = require('./ParsedAbResults');
+const WrittenBenchmark = require('./WrittenBenchmark');
+const LoggedWrittenBenchmark = require('./LoggedWrittenBenchmark');
+const TestedBenchmark = require('./TestedBenchmark');
 
 class StartedEventForBenchmark extends Event {
 
-  constructor(benchmarks, curBenchmarkNum) {
+  constructor(benchmarks) {
     super();
-    this.started = false;
     this.benchmarks = benchmarks;
-    this.curBenchmarkNum = curBenchmarkNum;
+    this.started = false;
   }
 
   definedBody(data) {
     if (!this.started) {
       console.log(data.toString('utf8'));
-      if (this.benchmarks[this.curBenchmarkNum]) {
-        new ParsedAbResult(
-          new ExecutedAb(`ab -c 10 -n 100 http://127.0.0.1:${this.benchmarks[this.curBenchmarkNum].port}/`)
+      const abRequests = this.benchmarks.bunchOfAbRequestsForCurrentBenchmark();
+      const resultFileName = this.benchmarks.currentBenchmarkResultFileName();
+      const curBenchmark = new LoggedWrittenBenchmark(
+        new WrittenBenchmark(
+          resultFileName, new ParsedAbResults(abRequests)
+        )
+      );
+      if (this.benchmarks.hasNext()) {
+        new TestedBenchmark(
+          this.benchmarks, curBenchmark
         ).call();
       } else {
-        // start new benchmark with incremented curBenchmarkNum
+        curBenchmark.call();
+        // TODO: generate R file
       }
       this.started = true;
     }
