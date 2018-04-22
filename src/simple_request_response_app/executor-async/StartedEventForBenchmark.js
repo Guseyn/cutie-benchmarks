@@ -20,7 +20,7 @@ class StartedEventForBenchmark extends Event {
       const abRequests = this.benchmarks.bunchOfAbRequestsForCurrentBenchmark();
       const resultFileName = this.benchmarks.currentBenchmarkResultFileName();
       const curBenchmark = new LoggedWrittenBenchmark(
-        new WrittenBenchmark(
+        resultFileName, new WrittenBenchmark(
           resultFileName, new ParsedAbResults(abRequests)
         )
       );

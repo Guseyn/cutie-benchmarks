@@ -9,7 +9,7 @@ class LoggedWrittenBenchmark extends AsyncObject  {
     super(path, benchmark);
   }
 
-  definedAsyncCall() {
+  definedSyncCall() {
     return (path, benchmark) => {
       console.log(`file with path ${path} has been written successfully`);
     };
