@@ -10,24 +10,27 @@ class GeneratedRFiles extends AsyncObject {
   }
 
   definedSyncCall() {
-    let RScripts = [];
     return (readBenchmarks, benchmarkMaps) => {
       benchmarkMaps.forEach(map => {
         let RScript = '';
         map.benchmarks.forEach((benchmarkNum, index) => {
-          let x = `x${index}<-(`;
-          let y = `y${index}<-(`;
+          let x = `x${index}<-c(`;
+          let y = `y${index}<-c(`;
           readBenchmarks[benchmarkNum].forEach((result, index) => {
             x += result[map['x']] + ((index !== readBenchmarks[benchmarkNum].length - 1) ? ',' : '');
             y += result[map['y']] + ((index !== readBenchmarks[benchmarkNum].length - 1) ? ',' : '');
           });
           x += ');';
           y += ');';
-          RScript +=`${x}\n${y}\n`;
+          RScript += `${x}\n${y}\nplot(x${index}, y${index}, type='n', xlab="${map['x']}", ylab="${map['y']}");\nlines(x${index}, y${index}, type='l', xlab="${map['x']}", ylab="${map['y']}");`;
         });
-        // TODO: end scripts and write them to R files
-        //console.log(RScript);
+        RScript += 'grid();\n';
+        map.script = RScript;
+        // TODO: replace with declarative abstraction
+        fs.writeFileSync(map.filePath, map.script);
+        console.log(`${map.filePath} has been written`);
       });
+      return benchmarkMaps;
     }
   }
 

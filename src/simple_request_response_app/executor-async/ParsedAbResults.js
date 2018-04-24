@@ -1,7 +1,6 @@
 'use strict'
 
 const AsyncObject = require('@guseyn/cutie').AsyncObject;
-const ExecutedAb = require('./ExecutedAb');
 
 class ParsedAbResults extends AsyncObject {
 

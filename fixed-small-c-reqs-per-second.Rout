@@ -1,0 +1,34 @@
+
+R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> x0<-c(10,50,150);
+> y0<-c(392.28,597.71,923.78);
+> plot(x0, y0);lines(x0, y0);grid();x1<-c(10,50,150);
+> y1<-c(375.71,660.31,736.66);
+> plot(x1, y1);lines(x1, y1);grid();x2<-c(10,50,150);
+> y2<-c(209.64,342.21,494.88);
+> plot(x2, y2);lines(x2, y2);grid();x3<-c(10,50,150);
+> y3<-c(196.61,330.79,452.13);
+> plot(x3, y3);lines(x3, y3);grid();
+> 
+> proc.time()
+   user  system elapsed 
+  0.210   0.036   0.270 
