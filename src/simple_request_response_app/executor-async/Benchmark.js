@@ -19,14 +19,14 @@ class Benchmark {
     this.params = params;
   }
 
-  run(benchmarks) {
+  run(benchmarks, benchmarkMaps) {
     new StartedServerByShellWithErrorEvent(
       new StartedServerByShellWithDataEvent(
         new StartedServerByShell(
           new KilledProcessOnPort(
             this.port, new FoundProcessOnPort(this.port)
           ), this.command, new EnvWithPort(this.port)
-        ), new StartedEventForBenchmark(benchmarks)
+        ), new StartedEventForBenchmark(benchmarks, benchmarkMaps)
       ), new ErrorEventForBenchmark()
     ).call();
   }

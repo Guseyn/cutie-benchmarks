@@ -5,8 +5,9 @@ const fs = require('fs');
 
 class ReadBenchmark extends AsyncObject {
 
-  constructor(filePath, encoding) {
-    super(filePath, encoding || 'utf8');
+  // ReadBenchmark can work on some writtenBenchmark, but it isn't included in readFile logic
+  constructor(filePath, writtenBenchmark) {
+    super(filePath, 'utf8');
   }
 
   definedAsyncCall() {
@@ -18,3 +19,5 @@ class ReadBenchmark extends AsyncObject {
   }
 
 }
+
+module.exports = ReadBenchmark;

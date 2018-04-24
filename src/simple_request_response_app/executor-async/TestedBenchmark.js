@@ -4,13 +4,13 @@ const AsyncObject = require('@guseyn/cutie').AsyncObject;
 
 class TestedBenchmark extends AsyncObject {
 
-  constructor(benchmarks, prevBenchmark) {
-    super(benchmarks, prevBenchmark);
+  constructor(benchmarks, benchmarkMaps, prevBenchmark) {
+    super(benchmarks, benchmarkMaps, prevBenchmark);
   }
 
   definedSyncCall() {
-    return (benchmarks, prevBenchmark) => {
-      return benchmarks.runNext();
+    return (benchmarks, benchmarkMaps, prevBenchmark) => {
+      return benchmarks.runNext(benchmarkMaps);
     }
   }
 

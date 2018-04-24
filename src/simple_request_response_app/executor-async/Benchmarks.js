@@ -7,9 +7,9 @@ class Benchmarks {
     this.currentNum = 0;
   }
 
-  runNext() {
+  runNext(benchmarkMaps) {
     const curNum = this.currentNum;
-    this.benchmarks[curNum].run(this);
+    this.benchmarks[curNum].run(this, benchmarkMaps);
     return this.benchmarks[curNum];
   }
 
@@ -19,6 +19,14 @@ class Benchmarks {
 
   bunchOfAbRequestsForCurrentBenchmark() {
     return this.benchmarks[this.currentNum].bunchOfAbRequests();
+  }
+
+  allFilePaths() {
+    let filePaths = [];
+    this.benchmarks.forEach(benchmark => {
+      filePaths.push(benchmark.resultFileName());
+    });
+    return filePaths;
   }
 
   hasNext() {
