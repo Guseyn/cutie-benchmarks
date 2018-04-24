@@ -36,6 +36,45 @@ const fixedMediumCParams = [
   {c: 50, n: 1000}
 ]
 
+const benchmarkMaps = [
+  {
+    fileName: 'fixed-n-reqs-per-second',
+    x: 'c',
+    y: 'requestsPerSecond',
+    benchmarks: [0, 3, 6, 9]
+  },
+  {
+    fileName: 'fixed-n-time-per-request',
+    x: 'c',
+    y: 'timePerRequest',
+    benchmarks: [0, 3, 6, 9]
+  },
+  {
+    fileName: 'fixed-small-c-reqs-per-second',
+    x: 'n',
+    y: 'requestsPerSecond',
+    benchmarks: [1, 4, 7, 10]
+  },
+  {
+    fileName: 'fixed-small-c-time-per-request',
+    x: 'n',
+    y: 'timePerRequest',
+    benchmarks: [1, 4, 7, 10]
+  },
+  {
+    fileName: 'fixed-medium-c-reqs-per-second',
+    x: 'n',
+    y: 'requestsPerSecond',
+    benchmarks: [2, 5, 8, 11]
+  },
+    {
+    fileName: 'fixed-medium-c-time-per-request',
+    x: 'n',
+    y: 'timePerRequest',
+    benchmarks: [2, 5, 8, 11]
+  }
+]
+
 const benchmarks = new Benchmarks(
   new Benchmark('fixed-n-cuties', './src/simple_request_response_app/cuties/example.js', 8080, fixedNParams),
   new Benchmark('fixed-small-c-cuties', './src/simple_request_response_app/cuties/example.js', 8080, fixedSmallCParams),
@@ -51,4 +90,4 @@ const benchmarks = new Benchmarks(
   new Benchmark('fixed-medium-c-hapi', './src/simple_request_response_app/hapi/example.js', 8080, fixedMediumCParams)
 );
 
-new TestedBenchmark(benchmarks).call();
+new TestedBenchmark(benchmarks, benchmarkMaps).call();

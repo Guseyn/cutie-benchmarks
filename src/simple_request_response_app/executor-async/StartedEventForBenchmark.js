@@ -5,12 +5,16 @@ const ParsedAbResults = require('./ParsedAbResults');
 const WrittenBenchmark = require('./WrittenBenchmark');
 const LoggedWrittenBenchmark = require('./LoggedWrittenBenchmark');
 const TestedBenchmark = require('./TestedBenchmark');
+const ReadBenchmark = require('./ReadBenchmark');
+const ReadBenchmarks = require('./ReadBenchmarks');
+const GeneratedRFiles = require('./GeneratedRFiles');
 
 class StartedEventForBenchmark extends Event {
 
-  constructor(benchmarks) {
+  constructor(benchmarks, benchmarkMaps) {
     super();
     this.benchmarks = benchmarks;
+    this.benchmarkMaps = benchmarkMaps;
     this.started = false;
   }
 
@@ -25,15 +29,33 @@ class StartedEventForBenchmark extends Event {
         )
       );
       if (this.benchmarks.hasNext()) {
-        new TestedBenchmark(
-          this.benchmarks, curBenchmark
-        ).call();
+        this.testNextBenchmark(curBenchmark)
       } else {
-        curBenchmark.call();
-        // TODO: generate R file
+        this.generateRFileOnLastTestedBenchmark(curBenchmark);
       }
       this.started = true;
     }
+  }
+
+  testNextBenchmark(curBenchmark) {
+    new TestedBenchmark(
+      this.benchmarks, this.benchmarkMaps, curBenchmark
+    ).call();
+  }
+
+  generateRFileOnLastTestedBenchmark(curBenchmark) {
+    const filePaths = this.benchmarks.allFilePaths();
+    const readFiles = [];
+    filePaths.forEach((filePath, index) => {
+      if (index !== filePaths.length - 1) {
+        readFiles.push(new ReadBenchmark(filePath));
+      } else {
+        readFiles.push(new ReadBenchmark(filePath, curBenchmark));
+      }
+    });
+    new GeneratedRFiles(
+      new ReadBenchmarks(...readFiles), this.benchmarkMaps
+    ).call();
   }
 
 }
