@@ -15,11 +15,13 @@
     "benchmarks"
   ],
   "dependencies": {
-    "@guseyn/cutie-rest": "1.0.3",
-    "express": "4.16.3",
+    "@cuties/cutie": "^1.4.4",
+    "@cuties/http": "^1.2.6",
+    "@cuties/rest": "^1.1.12",
     "body-parser": "1.18.2",
-    "hapi": "17.3.1",
+    "express": "4.16.3",
     "find-process": "1.1.1",
+    "hapi": "17.3.1",
     "promise-to-callback": "1.0.0"
   },
   "author": "guseyn",
