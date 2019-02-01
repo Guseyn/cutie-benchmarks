@@ -1,14 +1,12 @@
 'use strict'
 
-const {
-  Method
-} = require('@guseyn/cutie-rest');
+const { Method } = require('@cuties/rest');
 
 const {
   EndedResponse,
   WrittenResponse,
   ResponseWithWrittenHead
-} = require('@guseyn/cutie-http');
+} = require('@cuties/http');
 const LoggedMemoryUsage = require('./LoggedMemoryUsage');
 
 class GeneratedResponse extends Method {
@@ -17,8 +15,7 @@ class GeneratedResponse extends Method {
     super(regexpUrl, type);
   }
 
-  invoke(headers, type, url, body, response) {
-    let content = {headers, type, url, body};
+  invoke(request, response) {
     new LoggedMemoryUsage(
       new EndedResponse(
         new WrittenResponse(
@@ -26,8 +23,8 @@ class GeneratedResponse extends Method {
             response, 200, 'ok',  {
               'Content-Type': 'text/plain' 
             }
-          ), 'content ... '
-        ), `is delivered => ${content}`
+          ), `content ... => ${response} `
+        ), `is delivered`
       )
     ).call();
   }
